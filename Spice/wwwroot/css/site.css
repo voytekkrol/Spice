@@ -58,6 +58,7 @@ html {
   min-height: 100%;
 }
 
+
 body {
   /* Margin bottom by footer height */
   margin-bottom: 60px;
@@ -75,7 +76,7 @@ body {
 }
 
 
-.search-background{
+.search-background {
     background: url('/images/dust_scratches.png');
 }
 
@@ -100,3 +101,4 @@ body {
     border-radius: 10px;
     border: 1px solid #ddd;
 }
+
