@@ -26,5 +26,9 @@
                 <partial name="_CreateAndBackToListButton" />
             </div>
         </div>
-    </div> 
-</form> 
+    </div>
+</form>
+
+@section Scripts{
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
