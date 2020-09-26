@@ -132,7 +132,7 @@ namespace Spice.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var coupons = _db.Coupon.SingleOrDefaultAsync(m => m.Id == id);
+            var coupons = await _db.Coupon.SingleOrDefaultAsync(m => m.Id == id);
 
             if (coupons == null)
             {
@@ -141,6 +141,39 @@ namespace Spice.Areas.Admin.Controllers
 
             return View(coupons);
         }
+
+        //GET - DELETE
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+               return NotFound();
+            }
+
+            var coupons = await _db.Coupon.SingleOrDefaultAsync(m => m.Id == id);
+
+            if (coupons == null)
+            {
+                return NotFound();
+            }
+
+            return View(coupons);
+        }
+
+        //POST - DELETE
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(Coupon coupons)
+        {
+            if (coupons == null)
+            {
+                return NotFound();
+            }
+            
+            var couponFromDB = _db.Coupon.Where()
+        }
+
+
 
     }
 }
