@@ -169,8 +169,18 @@ namespace Spice.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            
-            var couponFromDB = _db.Coupon.Where()
+
+            var couponFromDB = await _db.Coupon.Where(m => m.Id == coupons.Id).FirstOrDefaultAsync();
+
+            if (couponFromDB == null)
+            {
+                return NotFound();
+            }
+
+            _db.Remove(couponFromDB);
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
 
 
