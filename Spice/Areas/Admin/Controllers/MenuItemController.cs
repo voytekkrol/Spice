@@ -80,7 +80,7 @@ namespace Spice.Areas.Admin.Controllers
                     files[0].CopyTo(filesStream);
                 }
 
-                menuItemFromDb.Image = @"\images" + MenuItemVM.MenuItem.Id + extension;
+                menuItemFromDb.Image = @"\images\" + MenuItemVM.MenuItem.Id + extension;
             }
             else
             {
