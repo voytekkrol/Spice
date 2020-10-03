@@ -38,6 +38,18 @@ namespace Spice.Controllers
         }
 
         [Authorize]
+        public async Task<IActionResult> Details(int id)
+        {
+            var menuItemFromDb = await _db.MenuItem.Include(m => m.Category).Include(m => m.SubCategory).Where(m => m.Id == id).SingleOrDefaultAsync();
+
+            ShoppingCart cartObj = new ShoppingCart
+            {
+                MenuItem = menuItemFromDb,
+                MenuItemId = menuItemFromDb.Id
+            };
+
+            return View(cartObj);
+        }
 
         public IActionResult Privacy()
         {
