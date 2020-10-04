@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -15,21 +14,24 @@ namespace Spice.Models
             Count = 1;
         }
 
+
         public int Id { get; set; }
+
         public string ApplicationUserId { get; set; }
 
         [NotMapped]
         [ForeignKey("ApplicationUserId")]
-        public ApplicationUser ApplicationUser { get; set; }
+        public virtual ApplicationUser ApplicationUser { get; set; }
 
         public int MenuItemId { get; set; }
 
         [NotMapped]
         [ForeignKey("MenuItemId")]
-        public MenuItem MenuItem { get; set; }
+        public virtual MenuItem MenuItem { get; set; }
 
-        [Range(1, int.MaxValue, ErrorMessage ="Please enter a value greater than or equal to {1}")]
+
+
+        [Range(1, int.MaxValue, ErrorMessage = "Please enter a value greater than or equal to {1}")]
         public int Count { get; set; }
-
     }
 }
