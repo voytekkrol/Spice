@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -16,7 +15,7 @@ namespace Spice.Models
         [Required]
         public string UserId { get; set; }
 
-        [ForeignKey("userId")]
+        [ForeignKey("UserId")]
         public virtual ApplicationUser ApplicationUser { get; set; }
 
         [Required]
@@ -27,30 +26,35 @@ namespace Spice.Models
 
         [Required]
         [DisplayFormat(DataFormatString = "{0:C}")]
-        [Display(Name ="Order Total")]
+        [Display(Name = "Order Total")]
         public double OrderTotal { get; set; }
 
         [Required]
-        [Display(Name ="Pickup Time")]
-        public DateTime PickupTime { get; set; }
+        [Display(Name = "Pickup Time")]
+        public DateTime PickUpTime { get; set; }
 
         [Required]
         [NotMapped]
-        public DateTime PickupDate { get; set; }
+        public DateTime PickUpDate { get; set; }
 
-        [Display(Name ="Coupon Code")]
+        [Display(Name = "Coupon Code")]
         public string CouponCode { get; set; }
         public double CouponCodeDiscount { get; set; }
         public string Status { get; set; }
         public string PaymentStatus { get; set; }
         public string Comments { get; set; }
 
-        [Display(Name ="PickupName")]
+
+        [Display(Name = "Pickup Name")]
         public string PickupName { get; set; }
 
         [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }
 
         public string TransactionId { get; set; }
+
+
+
+
     }
 }

@@ -8,6 +8,10 @@
   <ItemGroup>
     <Compile Remove="Data\Migrations\20200913202045_add.cs" />
     <Compile Remove="Data\Migrations\20200913202045_add.Designer.cs" />
+    <Compile Remove="Data\Migrations\20201004164707_AddOrderHeaderAndDetailsToDatabase.cs" />
+    <Compile Remove="Data\Migrations\20201004164707_AddOrderHeaderAndDetailsToDatabase.Designer.cs" />
+    <Compile Remove="Data\Migrations\20201004164931_AddOrderHeaderAndDetailsToDatabase.cs" />
+    <Compile Remove="Data\Migrations\20201004164931_AddOrderHeaderAndDetailsToDatabase.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
