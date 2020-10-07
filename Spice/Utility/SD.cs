@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Spice.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -54,6 +55,35 @@ namespace Spice.Utility
                 }
             }
             return new string(array, 0, arrayIndex);
+        }
+
+        public static double DiscountedPrice(Coupon couponFromDb, double originalOrderTotal)
+        {
+            if (couponFromDb == null)
+            {
+                return originalOrderTotal;
+            }
+            else
+            {
+                if (couponFromDb.MinimumAmount > originalOrderTotal)
+                {
+                    return originalOrderTotal;
+                }
+                else
+                {
+                    //everything is valid
+                    if (Convert.ToInt32(couponFromDb.CouponType) == (int)Coupon.ECouponType.Dollar)
+                    {
+                        return Math.Round(originalOrderTotal - couponFromDb.Discount, 2);
+                    }
+
+                    if (Convert.ToInt32(couponFromDb.CouponType) == (int)Coupon.ECouponType.Percent)
+                    {
+                        return Math.Round(originalOrderTotal - (originalOrderTotal * couponFromDb.Discount / 100), 2);
+                    }
+                }
+            }
+            return originalOrderTotal;
         }
     }
 }
