@@ -186,31 +186,30 @@
         });
 
         function validateInput() {
-            var time = document.getElementById('timepicker').value;
-            var date = document.getElementById('datepicker').value;
-            var name = document.getElementById('txtName').value;
-            var phone = document.getElementById('txtPhone').value;
-
-            if (time.toString() == '') {
-                alert("Please select pickup time");
+            var time = document.getElementById("timepicker").value;
+            var dt = document.getElementById("datepicker").value;
+            var name = document.getElementById("txtName").value;
+            var phone = document.getElementById("txtPhone").value;
+            if (dt.toString().length == 0) {
+                alert("Please select pickup date")
                 return false;
-            } else {
-                if (date.toString() == '') {
-                    alert("Please select pickup date");
-                    return false;
-                } else {
-                    if (name.toString() == '') {
-                        alert("Please enter pickup name");
-                        return false;
-                    } else {
-                        if (phone.toString() == '') {
-                            alert("Please enter pickup phone");
-                            return false;
-                        } else {
-                            return true;
-                        }
-
             }
+            else if (time.toString().length == 0) {
+                alert("Please select pickup time")
+                return false;
+            }
+            else if (name.toString().length == 0) {
+                alert("Please enter pickup name")
+                return false;
+            }
+            else if (phone.toString().length == 0) {
+                alert("Please enter a phone number")
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
 
 
     </script>
