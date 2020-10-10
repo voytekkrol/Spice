@@ -11,6 +11,7 @@ using Spice.Data;
 using Spice.Models;
 using Spice.Models.ViewModels;
 using Spice.Utility;
+using Stripe;
 
 namespace Spice.Areas.Customer.Controllers
 {
@@ -114,7 +115,7 @@ namespace Spice.Areas.Customer.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ActionName("Summary")]
-        public async Task<IActionResult> Summary() //It`s not necessery to use parametr of OrderDetailsCart becouse of BindProperty
+        public async Task<IActionResult> SummaryPost(string stripeToken) //It`s not necessery to use parametr of OrderDetailsCart becouse of BindProperty
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
@@ -165,6 +166,11 @@ namespace Spice.Areas.Customer.Controllers
             _db.ShoppingCart.RemoveRange(detailCart.listCart);
             HttpContext.Session.SetInt32(SD.ssShoppingCartCount, 0);
             await _db.SaveChangesAsync();
+
+            var options = new ChargeCreateOptions
+            {
+                Amount = Convert.ToInt32(detailCart.OrderHeader.OrderTotal * 100),
+            };
 
 
             return RedirectToAction("Index", "Home");
