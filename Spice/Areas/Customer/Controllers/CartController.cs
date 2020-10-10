@@ -127,24 +127,28 @@ namespace Spice.Areas.Customer.Controllers
             detailCart.OrderHeader.Status = SD.PaymentStatusPending;
             detailCart.OrderHeader.PickUpTime = Convert.ToDateTime(detailCart.OrderHeader.PickUpDate.ToShortDateString() + " " + detailCart.OrderHeader.PickUpTime.ToShortTimeString());
 
+            List<OrderDetails> orderDetailsList = new List<OrderDetails>();
+            _db.OrderHeader.Add(detailCart.OrderHeader);
+            await _db.SaveChangesAsync();
 
-            ApplicationUser applicationUser = await _db.ApplicationUser.Where(c => c.Id == claim.Value).FirstOrDefaultAsync();
+            detailCart.OrderHeader.OrderTotalOriginal = 0;
 
-            if (cart != null)
+            foreach (var item in detailCart.listCart)
             {
-                detailCart.listCart = cart.ToList();
-            }
+                item.MenuItem = await _db.MenuItem.FirstOrDefaultAsync(m => m.Id == item.MenuItemId);
+                OrderDetails orderDetails = new OrderDetails
+                {
+                    MenuItemId = item.MenuItemId,
+                    OrderId = detailCart.OrderHeader.Id,
+                    Description = item.MenuItem.Description,
+                    Name = item.MenuItem.Name,
+                    Price = item.MenuItem.Price,
+                    Count = item.Count
+                };
 
-            foreach (var list in detailCart.listCart)
-            {
-                list.MenuItem = await _db.MenuItem.FirstOrDefaultAsync(m => m.Id == list.MenuItemId);
-                detailCart.OrderHeader.OrderTotal = detailCart.OrderHeader.OrderTotal + (list.MenuItem.Price * list.Count);
+                detailCart.OrderHeader.OrderTotalOriginal += orderDetails.Count * orderDetails.Price;
+                _db.OrderDetails.Add(orderDetails);
             }
-
-            detailCart.OrderHeader.OrderTotalOriginal = detailCart.OrderHeader.OrderTotal;
-            detailCart.OrderHeader.PickupName = applicationUser.Name;
-            detailCart.OrderHeader.PhoneNumber = applicationUser.PhoneNumber;
-            detailCart.OrderHeader.PickUpTime = DateTime.Now;
 
             if (HttpContext.Session.GetString(SD.ssCouponCode) != null)
             {
@@ -152,8 +156,19 @@ namespace Spice.Areas.Customer.Controllers
                 var couponFromDb = await _db.Coupon.Where(c => c.Name.ToLower() == detailCart.OrderHeader.CouponCode.ToLower()).FirstOrDefaultAsync();
                 detailCart.OrderHeader.OrderTotal = SD.DiscountedPrice(couponFromDb, detailCart.OrderHeader.OrderTotalOriginal);
             }
+            else
+            {
+                detailCart.OrderHeader.OrderTotal = detailCart.OrderHeader.OrderTotalOriginal;
+            }
 
-            return View(detailCart);
+            detailCart.OrderHeader.CouponCodeDiscount = detailCart.OrderHeader.OrderTotalOriginal - detailCart.OrderHeader.OrderTotal;
+            _db.ShoppingCart.RemoveRange(detailCart.listCart);
+            HttpContext.Session.SetInt32(SD.ssShoppingCartCount, 0);
+            await _db.SaveChangesAsync();
+
+
+            return RedirectToAction("Index", "Home");
+            //return RedirectToAction("Confirm", "Order", new { id = detailCart.OrderHeader.Id });
         }
 
         public IActionResult AddCoupon()
