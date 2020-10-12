@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
@@ -251,7 +252,7 @@ namespace Spice.Areas.Customer.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> REmove(int cartId)
+        public async Task<IActionResult> Remove(int cartId)
         {
             var cart = await _db.ShoppingCart.FirstOrDefaultAsync(c => c.Id == cartId);
 
@@ -263,6 +264,29 @@ namespace Spice.Areas.Customer.Controllers
 
             await _db.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        [Authorize]
+        public async Task<IActionResult> OrderHistory()
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+            List<OrderDetailsViewModel> orderList = new List<OrderDetailsViewModel>();
+
+            List<OrderHeader> orderHeadersList = await _db.OrderHeader.Include(o => o.ApplicationUser).Where(o => o.UserId == claim.Value).ToListAsync();
+
+            foreach(OrderHeader item in orderHeadersList)
+            {
+                OrderDetailsViewModel individual = new OrderDetailsViewModel()
+                {
+                    OrderHeader = item,
+                    OrderDetails = await _db.OrderDetails.Where(o => o.OrderId == item.Id).ToListAsync()
+                };
+                orderList.Add(individual);
+            }
+
+            return View(orderList);
         }
     }
 }
