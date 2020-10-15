@@ -96,5 +96,18 @@ namespace Spice.Areas.Customer.Controllers
 
             return PartialView("_IndividualOrderDetails", orderDetailsViewModel);
         }
+
+        public async Task<IActionResult> GetOrderStatus(int id)
+        {
+            OrderDetailsViewModel orderDetailsViewModel = new OrderDetailsViewModel()
+            {
+                OrderHeader = await _db.OrderHeader.FirstOrDefaultAsync(m => m.Id == id),
+                OrderDetails = await _db.OrderDetails.Where(m => m.OrderId == id).ToListAsync()
+            };
+
+            orderDetailsViewModel.OrderHeader.ApplicationUser = await _db.ApplicationUser.FirstOrDefaultAsync(u => u.Id == orderDetailsViewModel.OrderHeader.UserId);
+
+            return PartialView("_IndividualOrderDetails", orderDetailsViewModel);
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿@model Spice.Models.ViewModels.OrderListViewModel
+@using Spice.Utility*
 
 @{
     ViewData["Title"] = "Index";
@@ -41,6 +42,7 @@
                         Total items
                     </th>
                     <th></th>
+                    <th></th>
                 </tr>
                 @foreach (var item in Model.Orders)
                 {
@@ -68,6 +70,18 @@
                                 <i class="far fa-list-alt"></i> Details
                             </button>
                         </td>
+                        @if (item.OrderHeader.Status == SD.StatusSubmitted || item.OrderHeader.Status == SD.StatusInProcess || item.OrderHeader.Status == SD.StatusReady || item.OrderHeader.Status == SD.StatusCompleted)
+                        {
+                            <td>
+                                <button type="submit" class="btn btn-info anchorStatus" data-id="@item.OrderHeader.Id" data-toggle="modal">
+                                    <i class="far fa-clock"></i> Status
+                                </button>
+                            </td>
+                        } 
+                        else
+                        {
+                            <td></td>
+                        }
                     </tr>
                 }
             </table>
@@ -105,6 +119,30 @@
         var PostBackURL = '/Customer/Order/GetOrderDetails';
         $(function () {
             $(".anchorDetail").click(function () {
+                var $buttonClicked = $(this);
+                var id = $buttonClicked.attr('data-id');
+                $.ajax({
+                    type: "GET",
+                    url: PostBackURL,
+                    contentType: "application/json; charset=utf-8",
+                    data: { "Id": id },
+                    cache: false,
+                    dataType: "html",
+                    success: function (data) {
+                        $('#myModalContent').html(data);
+                        $('#myModal').modal('show');
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed");
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        var PostBackURL = '/Customer/Order/GetOrderStatus';
+        $(function () {
+            $(".anchorStatus").click(function () {
                 var $buttonClicked = $(this);
                 var id = $buttonClicked.attr('data-id');
                 $.ajax({
