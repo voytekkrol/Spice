@@ -18,7 +18,7 @@ namespace Spice.Areas.Customer.Controllers
     public class OrderController : Controller
     {
         private readonly ApplicationDbContext _db;
-        private int PageSize = 2; 
+        private int PageSize = 2;
 
         public OrderController(ApplicationDbContext db)
         {
@@ -124,5 +124,36 @@ namespace Spice.Areas.Customer.Controllers
 
             return View(orderDetailsVM.OrderBy(o => o.OrderHeader.PickUpTime).ToList());
         }
+
+        [Authorize(Roles = SD.KitchenUser + "," + SD.ManagerUser)]
+        public async Task<IActionResult> OrderPrepare(int OrderId)
+        {
+            OrderHeader orderHeader = await _db.OrderHeader.FindAsync(OrderId);
+            orderHeader.Status = SD.StatusInProcess;
+            await _db.SaveChangesAsync();
+            return RedirectToAction("ManageOrder", "Order");
+        }
+
+        [Authorize(Roles = SD.KitchenUser + "," + SD.ManagerUser)]
+        public async Task<IActionResult> OrderReady(int OrderId)
+        {
+            OrderHeader orderHeader = await _db.OrderHeader.FindAsync(OrderId);
+            orderHeader.Status = SD.StatusReady;
+            await _db.SaveChangesAsync();
+
+            //Email logic to notify user that order is ready to pickup
+
+            return RedirectToAction("ManageOrder", "Order");
+        }
+
+        [Authorize(Roles = SD.KitchenUser + "," + SD.ManagerUser)]
+        public async Task<IActionResult> OrderCancel(int OrderId)
+        {
+            OrderHeader orderHeader = await _db.OrderHeader.FindAsync(OrderId);
+            orderHeader.Status = SD.StatusCancelled;
+            await _db.SaveChangesAsync();
+            return RedirectToAction("ManageOrder", "Order");
+        }
+
     }
 }
