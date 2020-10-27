@@ -41,6 +41,14 @@ namespace Spice
             services.Configure<StripeSettings>(Configuration.GetSection("Stripe")); 
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            services.AddAuthentication().AddFacebook(facebookOptions =>
+            {
+                facebookOptions.AppId = "2725168611077080";
+                facebookOptions.AppSecret = "53377dee1e82be1123bbafd942777cd3";
+
+            });
+
             services.ConfigureApplicationCookie(options =>
 
             {
