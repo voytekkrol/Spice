@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Spice.Data;
 using Spice.Models;
 using Spice.Models.ViewModels;
+using Spice.Service;
 using Spice.Utility;
 using Stripe;
 
@@ -30,7 +31,7 @@ namespace Spice.Areas.Customer.Controllers
         public CartController(ApplicationDbContext db, IEmailSender emailSender)
         {
             _db = db;
-            _emailSender = emailSender;
+            _emailSender =  emailSender;
         }
 
         public async Task<IActionResult> Index()
@@ -193,7 +194,7 @@ namespace Spice.Areas.Customer.Controllers
 
             if (charge.Status.ToLower() == "succeeded")
             {
-                await _emailSender.SendEmailAsync(_db.Users.Where(u => u.Id == claim.Value).FirstOrDefault().Email, "Spice - Order Created " + detailCart.OrderHeader.Id.ToString(), "Order has been submited successfully");
+                await _emailSender.SendEmailAsync(_db.Users.Where(u => u.Id == claim.Value).FirstOrDefault().Email, "Spice - Order Created " + detailCart.OrderHeader.Id.ToString(), "Order has been submitted successfully");
 
                 detailCart.OrderHeader.PaymentStatus = SD.PaymentStatusApproved;
                 detailCart.OrderHeader.Status = SD.StatusSubmitted;

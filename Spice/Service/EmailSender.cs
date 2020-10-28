@@ -1,9 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc.Formatters;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
-using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using System;
@@ -16,6 +12,7 @@ namespace Spice.Service
     public class EmailSender : IEmailSender
     {
         public EmailOptions Options { get; set; }
+
         public EmailSender(IOptions<EmailOptions> emailOptions)
         {
             Options = emailOptions.Value;
@@ -36,17 +33,15 @@ namespace Spice.Service
                 PlainTextContent = message,
                 HtmlContent = message
             };
-
             msg.AddTo(new EmailAddress(email));
             try
             {
                 return client.SendEmailAsync(msg);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
             }
-
             return null;
         }
     }
