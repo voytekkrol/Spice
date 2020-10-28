@@ -38,7 +38,8 @@ namespace Spice
                 .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddSingleton<IEmailSender, EmailSender>();
-            services.Configure<StripeSettings>(Configuration.GetSection("Stripe")); 
+            services.Configure<StripeSettings>(Configuration.GetSection("Stripe"));
+            services.Configure<Spice.Service.EmailOptions>(Configuration);
             services.AddControllersWithViews();
             services.AddRazorPages();
 
