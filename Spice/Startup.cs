@@ -45,12 +45,12 @@ namespace Spice
             services.AddControllersWithViews();
             services.AddRazorPages();
 
-            services.AddAuthentication().AddFacebook(facebookOptions =>
-            {
-                facebookOptions.AppId = "";
-                facebookOptions.AppSecret = "";
+            //services.AddAuthentication().AddFacebook(facebookOptions =>
+            //{
+            //    facebookOptions.AppId = "";
+            //    facebookOptions.AppSecret = "";
 
-            });
+            //});
 
             services.ConfigureApplicationCookie(options =>
 
